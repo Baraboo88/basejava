@@ -78,6 +78,6 @@ public class ArrayStorage {
 
     int size() {
 
-        return size; //returning value of size instance
+        return size; //returning value of size instance fgd
     }
 }
