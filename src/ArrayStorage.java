@@ -5,40 +5,37 @@ import java.util.List;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
+
+    private int size = 0;
     Resume[] storage = new Resume[10000];
 
     void clear() {
-        // moving though array in order to find non-equal elements
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) { //if element is not equal to null - assign to this element "null"
-                storage[i] = null;
-            }
+
+        // moving though array in order to find non-null elements
+        for (int i = 0; i < size; i++) {
+                storage[i] = null; // assigning null to those elements
         }
+        size = 0; // reset size value
     }
 
     void save(Resume r) {
 
-        //moving through array in order to find first null element
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) { //assigning argument value to the first null element of the array
-                storage[i] = r;
-                break;
-            }
+
+        if(size+1 != storage.length){ // checking if after adding a new element we will not out of array capacity
+            storage[size] = r;
+            size++;
         }
 
     }
 
     Resume get(String uuid) {
 
-        Resume returningObject = new Resume(); //creating "Dummy" Resume element in order not to have NullPointerException
-
-        returningObject.uuid = "Dummy input"; //assigning value in order to have sensible output when we are receiving "Dummy" input
+        Resume returningObject = null; //creating Resume reference variable with null value
 
         //Moving through array in order to find Resume object with requested value
-        for (Resume resume : storage) {
-            if (resume != null&& uuid.equals(resume.uuid)) { //using null check in order not to have Exception and equality of the array element object with method argument value
-
-                returningObject = resume; //assigning object reference to the returning object
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {// checking if requested value is equals to the array element field value
+                returningObject = storage[i]; //assigning object reference from storage array to the returning reference
             }
         }
 
@@ -48,19 +45,20 @@ public class ArrayStorage {
     void delete(String uuid) {
 
         //Moving through array in order to find Resume object with requested uuid value
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null && storage[i].uuid.equals(uuid)) { //using null check in order not to have Exception and equality of the array element object with method argument value
-                storage[i] = null;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) { //using equality check in order to find an element in the array which equal to method argument value
+
                 for (int j = i; j < storage.length - 1; j++) { //moving all elements of the array 1 index to the left. Using storage.length - 1 in order not to have NullPointerException when "j" will be equal to the last index of the array
 
                     storage[j] = storage[j + 1];
 
                 }
+                size--; // decrementing size value
 
             }
         }
 
-        storage[storage.length - 1] = null; // adding null in order to complete array element moving if we have fully populated array
+        storage[storage.length - 1] = null; // adding null in order to complete array element shifting if we have fully populated array
     }
 
     /**
@@ -68,27 +66,18 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
 
-        List<Resume> listOfResumes = new ArrayList<>(); //creating supportive Arraylist
+        Resume [] outcomeArray = new Resume[size];
 
-        //adding all non-null elements of the array into the supportive arraylist
-        for (Resume resume : storage) {
-            if (resume != null) {
-                listOfResumes.add(resume);
-            }
+        //storing non-null elements into outcomeArray
+        for (int i = 0; i < size; i++) {
+        outcomeArray[i] = storage[i];
         }
 
-        return listOfResumes.toArray(new Resume[0]); //converting Arraylist into Array and returning it
-    }
+        return outcomeArray;
+}
 
     int size() {
-        int count = 0; // creating count number
 
-        //moving through the array in order to find all non-null elements and iterate the value of cont instance
-        for (Resume resume : storage) {
-            if (resume != null) {
-                count++;
-            }
-        }
-        return count; //returning count value
+        return size; //returning value of size instance
     }
 }
