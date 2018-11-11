@@ -13,9 +13,9 @@ public class ArrayStorage {
 
         // moving though array in order to find non-null elements
         for (int i = 0; i < size; i++) {
-                storage[i] = null; // assigning null to those elements
+                storage[i] = null;
         }
-        size = 0; // reset size value
+        size = 0;
     }
 
     void save(Resume r) {
@@ -30,35 +30,35 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
 
-        Resume returningObject = null; //creating Resume reference variable with null value
 
         //Moving through array in order to find Resume object with requested value
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {// checking if requested value is equals to the array element field value
-                returningObject = storage[i]; //assigning object reference from storage array to the returning reference
+            if (uuid.equals(storage[i].uuid)) {
+                return storage[i];
             }
         }
 
-        return returningObject;
+        return null;
     }
 
     void delete(String uuid) {
 
         //Moving through array in order to find Resume object with requested uuid value
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) { //using equality check in order to find an element in the array which equal to method argument value
+            if (storage[i].uuid.equals(uuid)) {
 
-                for (int j = i; j < storage.length - 1; j++) { //moving all elements of the array 1 index to the left. Using storage.length - 1 in order not to have NullPointerException when "j" will be equal to the last index of the array
+                for (int j = i; j < size - 1; j++) {
 
                     storage[j] = storage[j + 1];
 
                 }
-                size--; // decrementing size value
+                storage[size-1] = null;
+                size--;
 
             }
         }
 
-        storage[storage.length - 1] = null; // adding null in order to complete array element shifting if we have fully populated array
+
     }
 
     /**
@@ -78,6 +78,6 @@ public class ArrayStorage {
 
     int size() {
 
-        return size; //returning value of size instance fgd
+        return size;
     }
 }
