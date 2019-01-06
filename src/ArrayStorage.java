@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
@@ -7,23 +6,42 @@ import java.util.List;
 public class ArrayStorage {
 
     private int size = 0;
-    Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10000];
 
     void clear() {
 
-        // moving though array in order to find non-null elements
-        for (int i = 0; i < size; i++) {
-                storage[i] = null;
-        }
+        Arrays.fill(storage, null);
         size = 0;
     }
 
     void save(Resume r) {
 
+        // checking if after adding a new element we will not out of array capacity && checking if the value of r object isn't null
+        if(size+1 != storage.length && r != null){ // checking if after adding a new element we will not out of array capacity
 
-        if(size+1 != storage.length){ // checking if after adding a new element we will not out of array capacity
-            storage[size] = r;
-            size++;
+            int i = -1;
+            //checking if we have in our storage Resume with the uuid as received for saving object if we have such iterating i instance
+            for(int j = 0; j < size; j++){
+                if(storage[j].uuid.equals(r.uuid)){
+                 i++;
+                }
+
+            }
+            if(i < 0){
+                storage[size] = r;
+                size++;
+
+            }
+            else {
+                System.out.println("Resume with uuid " + r.uuid +" is already presented in the base");
+
+            }
+
+
+
+        }
+        else {
+            System.out.println("Resume can't be added as storage is crowded or you passed null Resume");
         }
 
     }
@@ -32,32 +50,41 @@ public class ArrayStorage {
 
 
         //Moving through array in order to find Resume object with requested value
+
+        Resume resume = null;
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
-                return storage[i];
+                resume = storage[i];
             }
         }
 
-        return null;
+        if(resume == null){
+            System.out.println("Resume isn't exist");
+        }
+
+        return resume;
     }
 
     void delete(String uuid) {
 
+        boolean isDeleted = false;
         //Moving through array in order to find Resume object with requested uuid value
         for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
 
-                for (int j = i; j < size - 1; j++) {
+                storage[i] = storage[size-1];
 
-                    storage[j] = storage[j + 1];
-
-                }
+                isDeleted = true;
                 storage[size-1] = null;
                 size--;
+
 
             }
         }
 
+        if(!isDeleted){
+            System.out.println("Requested resume wasn't found");
+        }
 
     }
 
@@ -66,18 +93,33 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
 
-        Resume [] outcomeArray = new Resume[size];
+       return Arrays.copyOfRange(storage, 0, size);
 
-        //storing non-null elements into outcomeArray
-        for (int i = 0; i < size; i++) {
-        outcomeArray[i] = storage[i];
-        }
-
-        return outcomeArray;
 }
 
     int size() {
 
         return size;
     }
+
+    private void update (Resume resume){
+
+        boolean isFound  = false;
+
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(resume.uuid)) {
+
+                storage[i] = resume;
+                isFound = true;
+            }
+        }
+
+        if(!isFound){
+            System.out.println("Such resume wasn't found");
+        }
+
+    }
+
+
+
 }
