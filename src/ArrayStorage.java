@@ -12,6 +12,7 @@ public class ArrayStorage {
 
         Arrays.fill(storage, null);
         size = 0;
+
     }
 
     void save(Resume r) {
